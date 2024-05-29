@@ -9,11 +9,6 @@ export const getWallet = (privateKey?: string) => {
   if (typeof window !== 'undefined' && window.ethereum) {
     provider = new BrowserProvider(window.ethereum)
   }
-    // if (!privateKey) {
-    // //   // Get wallet private key from .env file
-    //   if (!process.env.NEXT_PUBLIC_WALLET_PRIVATE_KEY)
-    //     throw "⛔️ Wallet private key wasn't found in .env file!";
-    // }
   
       
     // Initialize zkSync Wallet
