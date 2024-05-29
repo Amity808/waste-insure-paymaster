@@ -4,10 +4,10 @@ import WasteList from "@/components/ListCards/WasteList"
  export default function Dashboard() {
   return (
     <div className="pt-4 py-8">
-      <SideBar />
+      {/* <SideBar /> */}
       <div className=" ml-60 text-2xl py-10  max-sm:ml-0 max-md:ml-0">
         <div>
-          {/* <WasteList /> */}
+          <WasteList />
         </div>
       </div>
     </div>
