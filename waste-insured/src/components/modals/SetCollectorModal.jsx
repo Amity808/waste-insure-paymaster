@@ -3,6 +3,10 @@ import { IoCloseCircle } from "react-icons/io5";
 import { toast } from'react-toastify'
 import { useWriteContract, useSimulateContract, useReadContract } from "wagmi";
 import { useAccount, useBalance} from 'wagmi'
+import { wasteInsure } from "@/abi/wasteInsured";
+import { gaslessPaymasterContract } from '@/abi/paymaster-contract';
+import { utils, BrowserProvider } from "zksync-ethers";
+import { getWallet } from "../../utils/getwallet";
 
 const SetCollectorModal = () => {
     const [toggle, setToggle] = useState(false)
@@ -18,22 +22,27 @@ const SetCollectorModal = () => {
       setCollector('')
     }
 
+    const { data: simulate } = useSimulateContract({
+      address: wasteInsure.address,
+      abi: wasteInsure.abi,
+      functionName: 'assignProducer',
+      args: [collector]
+    })
+
+    const { writeContractAsync } = useWriteContract();
+
     
-    // write to the contract
-    // const { writeAsync: assignProducer } = useContractSend('assignProducer', [
-    //   deBounceCollector
-    // ])
+  
 
     const handleAssignProducer = async () => {
-      if(!assignProducer) {
-        throw "Failed To Assign Collector"
-      }
+      // if(!assignProducer) {
+      //   throw "Failed To Assign Collector"
+      // }
       setLoading('Assigning......')
       if(!isFormFilled) throw new Error("Please enter the correct collector wallet address");
-
+      await writeContractAsync(simulate?.request)
       
       setLoading("Waiting for confirmation....")
-      await transTx
 
       setToggle(false)
       clearForm()
@@ -81,7 +90,7 @@ const SetCollectorModal = () => {
                 <form onSubmit={addCollector}>
                   <input type="text" onChange={(e) => setCollector(e.target.value)} name="Wastecollector" id="wasteCollector"  className=' mt-5 py-4 px-6 w-full rounded-full text-black border-2 border-[#EFAE07]' placeholder='Enter Collector Address'/>
                   <div className=' flex justify-between mt-5'>
-                  <button type='submit' className=' border-4 text-white border-[#EFAE07] bg-[#06102b] px-4 py-2 rounded-full' disabled={!!loading || !isFormFilled || !assignProducer} >
+                  <button type='submit' className=' border-4 text-white border-[#EFAE07] bg-[#06102b] px-4 py-2 rounded-full' disabled={!!loading || !isFormFilled} >
                       {loading ? loading : "Assigning Collector"}
                   </button>
                   <button type='button' className='' onClick={() => setToggle(false)}><IoCloseCircle  size={30} color="#efae07"/></button>

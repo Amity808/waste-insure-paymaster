@@ -71,31 +71,41 @@ const AddWasteModal = () => {
 
 
   const addwastepromise = async () => {
-    setLoading("Record.....");
-    if (!isFormFilled) throw new Error("Please fill the correct details");
-
-    let paymasterBalance = await provider.getBalance(Generatepayment.address);
-
-    console.log("Balance paymaster ", paymasterBalance.toString());
-
-    const wasteAmountInBigInt = BigInt(Math.round(wasteAmount * 1000000));
-    await contractWasteInsured.recordWaste(
-      name,
-      wasteType,
-      collectionLocation,
-      weight,
-      wasteAmountInBigInt,
-      hospitalAddress,
-      {
-        customData: {
-          gasPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
-          paymasterParams: paymasterParams,
-        },
-      }
-    );
-
-    console.log("Afer paymaster ", paymasterBalance.toString());
-    handleClear();
+    // e.preventDefault();
+    // try {
+      
+      // setLoading("Record.....");
+      // toast.loading("Record.....")
+      if (!isFormFilled) throw new Error("Please fill the correct details");
+  
+      let paymasterBalance = await provider.getBalance(Generatepayment.address);
+  
+      console.log("Balance paymaster ", paymasterBalance.toString());
+  
+      const wasteAmountInBigInt = BigInt(Math.round(wasteAmount * 1000000));
+      const result = await contractWasteInsured.recordWaste(
+        name,
+        wasteType,
+        collectionLocation,
+        weight,
+        wasteAmountInBigInt,
+        hospitalAddress,
+        {
+          customData: {
+            gasPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
+            paymasterParams: paymasterParams,
+          },
+        }
+      );
+      await result.wait()
+      console.log(result, " result");
+      toast.success("Waste Recorded")
+      console.log("Afer paymaster ", paymasterBalance.toString());
+      handleClear();
+    // } catch (error) {
+      // console.log(error," error");
+    //   toast.error("Something Went wrong. Try record waste, ");
+    // }
 
   }
  
@@ -205,7 +215,7 @@ const AddWasteModal = () => {
                   className=" border-4 text-white border-[#EFAE07] bg-[#06102b] px-4 py-2 rounded-full"
                   // disabled={!!loading || !isFormFilled || !recordWaste}
                 >
-                  {loading ? loading : "Recording Waste"}
+                  {loading ? loading : "Record Waste"}
                 </button>
                 <button type="button" onClick={() => setToggle(false)}>
                   <IoCloseCircle size={30} color="#06102b" />
