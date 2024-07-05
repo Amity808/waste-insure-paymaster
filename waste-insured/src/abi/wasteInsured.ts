@@ -1,9 +1,9 @@
 export const wasteInsure = {
-  "address": "0x70dc871D425Bb8878FE62e04399e03497eB5189a",
+  "address": "0xeE571028e2889e4e0a4c10Ad60Fbf177A2932462",
   "abi": [
     {
       "inputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
       "type": "constructor"
     },
     {
@@ -236,7 +236,7 @@ export const wasteInsure = {
         },
         {
           "internalType": "string",
-          "name": "",
+          "name": "image",
           "type": "string"
         },
         {
@@ -246,7 +246,7 @@ export const wasteInsure = {
         },
         {
           "internalType": "string",
-          "name": "",
+          "name": "hospitalType",
           "type": "string"
         },
         {
@@ -329,7 +329,7 @@ export const wasteInsure = {
     },
     {
       "inputs": [],
-      "name": "getWasteLenght",
+      "name": "getWasteLength",
       "outputs": [
         {
           "internalType": "uint256",
@@ -527,7 +527,7 @@ export const wasteInsure = {
       "outputs": [
         {
           "internalType": "address payable",
-          "name": "wassetWasteAdmin",
+          "name": "wasteAdmin",
           "type": "address"
         },
         {

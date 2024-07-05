@@ -3,16 +3,15 @@ import { IoCloseCircle } from "react-icons/io5";
 import { toast } from "react-toastify";
 import { ethers } from "ethers";
 import { wasteInsure } from "@/abi/wasteInsured";
-import { useWriteContract, useSimulateContract, useReadContract } from "wagmi";
 import { Generatepayment } from "@/abi/GeneralPayment";
-
-import { useAccount } from "wagmi";
 import { utils, BrowserProvider } from "zksync-ethers";
 import { getWallet } from "../../utils/getwallet";
+import { useRouter } from "next/navigation";
+
 
 const AddHospitalModal = () => {
 
-  const router = useNavigate()
+  const router = useRouter()
   const [toggle, setToggle] = useState(false);
   const [loading, setLoading] = useState('')
   const [name, setName] = useState("");
@@ -59,6 +58,7 @@ const AddHospitalModal = () => {
 
 
   const handleHopital = async () => {
+    // e.preventDefault()
     setLoading("Registering.....")
     if(!isFormFilled) {
       toast.warn("Please fill the correct details")
@@ -71,11 +71,10 @@ const AddHospitalModal = () => {
 
     await contractWasteInsured.registerPartnerHospital(
         name,
-        wasteType,
-        collectionLocation,
-        weight,
-        wasteAmountInBigInt,
-        hospitalAddress,
+        image,
+        Location,
+        hospitalType,
+        walletAddress,
         {
           customData: {
             gasPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
@@ -84,7 +83,7 @@ const AddHospitalModal = () => {
         }
       );
     setLoading("waiting for comfirmation")
-    toast.loading("Waiting for comfirmation")
+    // toast.loading("Waiting for comfirmation")
 
     setToggle(false)
     handleClear()
@@ -108,7 +107,7 @@ const AddHospitalModal = () => {
       toast.error(e?.message || "Something went wrong. Contact the Admin")
     }
 
-    router("/hospital")
+    router.push("/hospital")
 
   }
   return (
@@ -187,7 +186,7 @@ const AddHospitalModal = () => {
                 <button
                   type="submit"
                   className=" border-4 text-white border-[#EFAE07] bg-[#06102b] px-4 py-2 rounded-full"
-                  disabled={!!loading || !isFormFilled || !registerHospital}
+                  disabled={!!loading || !isFormFilled || !addHospital}
                 >
                   {loading ? loading : "Register partner"}
                 </button>

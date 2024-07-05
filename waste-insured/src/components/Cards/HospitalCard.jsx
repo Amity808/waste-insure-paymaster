@@ -15,6 +15,8 @@ const HospitalCard = ({ id, setError, setLoading, clear }) => {
     functionName: "getHospitalInfo",
     args: [id],
   })
+
+  console.log(getHospitalInfo, "getHospitalInfo");
   
   const [hospital, setHospital] = useState(null);
   const [copyAddress, setCopyAddress] = useState('')
@@ -47,7 +49,7 @@ const HospitalCard = ({ id, setError, setLoading, clear }) => {
   }
   return (
     <div className=" w-96 bg-[#EFAE07] text-base font-semibold rounded-xl">
-      <img src={hospital.imagehos} alt="" className="" />
+      <img src={hospital.imagehos} alt="" className=" w-full" />
       <div className=" flex flex-col items-center justify-center pt-3">
         <div className=" flex flex-row gap-8 text-center">
           <span>

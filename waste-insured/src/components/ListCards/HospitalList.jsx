@@ -9,11 +9,12 @@ const HospitalList = () => {
   const { data: data } = useReadContract({
     abi: wasteInsure.abi,
     address: wasteInsure.address,
-    functionName: "getHospitalCount",
+    functionName: "hospitalCounter",
     args: [],
   });
 
   const hospitalLength = data ? Number(data.toString()) : 0;
+  console.log(data)
 
   const getHospitalLength = () => {
     if (!hospitalLength) return null;

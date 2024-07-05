@@ -18,7 +18,7 @@ export default function SideBar() {
             <h1 className=' text-3xl font-bold max-sm:text-xl text-blue-950 mr-5 my-6'>Dashboard</h1>
             <SetCollectorModal />
             <AddWasteModal />
-            {/* <AddHospitalModal /> */}
+            <AddHospitalModal />
         </div>
     <div className="md:hidden  mt-3 ml-10">
     <h1 className=' text-3xl font-bold max-sm:text-xl text-blue-950 mr-5 my-6'>Dashboard</h1>
