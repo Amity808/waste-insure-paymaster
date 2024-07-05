@@ -5,20 +5,18 @@ interface IERC20Token {
     function transfer(address, uint256) external returns (bool);
     function approve(address, uint256) external returns (bool);
     function transferFrom(address, address, uint256) external returns (bool);
-    function totalSupply() external view  returns (uint256);
-    function balanceOf(address) external view  returns (uint256);
-    function allowance(address, address) external view  returns (uint256);
+    function totalSupply() external view returns (uint256);
+    function balanceOf(address) external view returns (uint256);
+    function allowance(address, address) external view returns (uint256);
 
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
 contract WasteInsured {
-    
-
     // Struct to represent waste records
     struct Waste {
-        address payable wassetWasteAdmin;
+        address payable wasteAdmin;
         address payable producer;
         string depositor;
         string wasteType; // Store the waste type as an integer (0 for Plastic, 1 for Metal)
@@ -44,7 +42,7 @@ contract WasteInsured {
     mapping(uint256 => Waste) public wasteRecords;
     uint256 public wasteCounter;
 
-     // Mapping to keep track of assigned point of collection
+    // Mapping to keep track of assigned point of collection
     mapping(address => bool) public assignedCollector;
 
     // Address of the waste admin (previously named Collector)
@@ -69,7 +67,6 @@ contract WasteInsured {
         _;
     }
 
-
     // Modifier to restrict access to the waste admin
     modifier onlyWasteAdmin() {
         require(msg.sender == wasteAdmin, "Only the waste admin can perform this action");
@@ -77,42 +74,33 @@ contract WasteInsured {
     }
 
     // Constructor to set the waste admin during deployment
-    constructor() payable {
+    constructor() {
         wasteAdmin = payable(msg.sender);
-        hospitalCounter = 0;
     }
 
     // Function for the waste admin to register a partnered hospital
-    function registerPartnerHospital(string memory _name, string memory _image, string memory _location, string memory _hospitalType,address payable _walletAddress) public onlyWasteAdmin {
+    function registerPartnerHospital(string memory _name, string memory _image, string memory _location, string memory _hospitalType, address payable _walletAddress) public onlyWasteAdmin {
         require(_walletAddress != address(0), "Invalid hospital address");
 
-        hospitalCounter++;
         hospitals[hospitalCounter] = Hospital(_name, _image, _location, _hospitalType, _walletAddress);
-        emit HospitalRegistered(hospitalCounter, _name, _location, _hospitalType,  _walletAddress);
+        hospitalCounter++;
+        emit HospitalRegistered(hospitalCounter, _name, _location, _hospitalType, _walletAddress);
     }
 
-    
     // Function for a producer to choose a hospital based on the hospital ID
-     function assignProducer(address payable _collector) public {
+    function assignProducer(address payable _collector) public {
         require(_collector != address(0), "Invalid producer address");
 
         assignedCollector[_collector] = true;
     }
 
-    
-
     // Function for a producer to record waste information
-    function recordWaste(string memory _depositor,string memory _wasteType, string memory _collectionLocation, uint256 _weight, uint256 _wasteAmount, address payable _hospitalAddress) public onlyCollector {
-        
+    function recordWaste(string memory _depositor, string memory _wasteType, string memory _collectionLocation, uint256 _weight, uint256 _wasteAmount, address payable _hospitalAddress) public onlyCollector {
+        wasteRecords[wasteCounter++] = Waste(wasteAdmin, payable(msg.sender), _depositor, _wasteType, _collectionLocation, _weight, true, false, false, _wasteAmount, _hospitalAddress);
 
-
-        wasteRecords[wasteCounter++] = Waste(wasteAdmin,payable(msg.sender), _depositor, _wasteType, _collectionLocation, _weight, true, false, false, _wasteAmount, _hospitalAddress);
-
-        emit WasteRecorded(wasteCounter, msg.sender, _depositor,_wasteType, _collectionLocation, _weight, _wasteAmount, _hospitalAddress);
+        emit WasteRecorded(wasteCounter, msg.sender, _depositor, _wasteType, _collectionLocation, _weight, _wasteAmount, _hospitalAddress);
     }
 
-
-    
     // Function for the waste admin to know if the waste recorded waste is validated
     function validateWaste(uint256 _wasteId) public onlyWasteAdmin {
         require(_wasteId <= wasteCounter, "Invalid waste ID");
@@ -120,39 +108,30 @@ contract WasteInsured {
         require(!wasteRecords[_wasteId].isValidated, "Waste is already validated");
 
         emit WasteValidated(_wasteId, msg.sender);
-        
     }
 
-
-
     // Function for the waste admin to send payment to a hospital
-    function wastePayment(uint256 _wasteId) external onlyWasteAdmin  {
+    function wastePayment(uint256 _wasteId) external onlyWasteAdmin {
         require(!wasteRecords[_wasteId].isValidated, "Waste is already validated");
-    
-        
-        
+
         wasteRecords[_wasteId].isValidated = true;
         wasteRecords[_wasteId].isPaid = true;
         uint256 amount = wasteRecords[_wasteId].wasteAmount;
 
-        (bool sent, ) = payable(wasteRecords[_wasteId].hospitalAddress).call{value: amount}("");
+        (bool sent, ) = wasteRecords[_wasteId].hospitalAddress.call{value: amount}("");
         require(sent, "Failed to send Ether");
 
-        wasteRecords[_wasteId].hospitalAddress.transfer(amount);
+        emit PaymentSent(wasteRecords[_wasteId].hospitalAddress, amount);
     }
 
-    // Function for the waste admin to withdraw funds from the contract
     function withdrawFunds(uint256 _amount) public onlyWasteAdmin {
-        uint256 withdrawalAmount = _amount * 1 ether; // Convert the amount from Ether to wei
+        require(_amount <= address(this).balance, "Insufficient contract balance");
 
-        require(withdrawalAmount <= address(this).balance, "Insufficient contract balance");
-
-        (bool sent, ) = payable(wasteAdmin).call{value: withdrawalAmount}("");
+        (bool sent, ) = wasteAdmin.call{value: _amount}("");
         require(sent, "Failed to send Ether");
 
-        emit FundsWithdrawn(wasteAdmin, withdrawalAmount);
+        emit FundsWithdrawn(wasteAdmin, _amount);
     }
-
 
     // Function to get waste information by waste ID
     function getWasteInfo(uint256 _wasteId) public view returns (
@@ -168,12 +147,10 @@ contract WasteInsured {
         uint256,
         address payable
     ) {
-        // require(_wasteId <= wasteCounter && _wasteId > 0, "Invalid waste ID");
-
         Waste storage waste = wasteRecords[_wasteId];
 
         return (
-            waste.wassetWasteAdmin,
+            waste.wasteAdmin,
             waste.producer,
             waste.depositor,
             waste.wasteType,
@@ -187,9 +164,9 @@ contract WasteInsured {
         );
     }
 
-     // Function to get the total number of registered hospitals
-    function getWasteLenght() public view returns (uint256) {
-        return (wasteCounter);
+    // Function to get the total number of registered hospitals
+    function getWasteLength() public view returns (uint256) {
+        return wasteCounter;
     }
 
     function getHospitalCount() public view returns (uint256) {
@@ -197,8 +174,8 @@ contract WasteInsured {
     }
 
     // Function to get information about a specific hospital by hospital ID
-    function getHospitalInfo(uint256 _hospitalId) public view returns (string memory name, string memory, string memory location, string memory, address walletAddress) {
-        require(_hospitalId <= hospitalCounter && _hospitalId > 0, "Invalid hospital ID");
+    function getHospitalInfo(uint256 _hospitalId) public view returns (string memory name, string memory image, string memory location, string memory hospitalType, address walletAddress) {
+        require(_hospitalId <= hospitalCounter, "Invalid hospital ID");
 
         Hospital storage hospital = hospitals[_hospitalId];
 
@@ -211,7 +188,6 @@ contract WasteInsured {
         );
     }
 
-    
     // Fallback function to receive funds
     receive() external payable {}
 }

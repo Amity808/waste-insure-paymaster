@@ -36,14 +36,21 @@ const config: HardhatUserConfig = {
     hardhat: {
       zksync: true,
     },
+    jpc: {
+      url: "https://rpc-2.testnet.japanopenchain.org:8545	",
+      chainId: 10081,
+      zksync: true
+    }
   },
   zksolc: {
     version: "latest",
     settings: {
+      evmVersion: "paris"
       // find all available options in the official documentation
       // https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-solc.html#configuration
     },
   },
+  
   solidity: {
     version: "0.8.17",
   },
