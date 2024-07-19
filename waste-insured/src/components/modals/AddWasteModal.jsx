@@ -53,6 +53,7 @@ const AddWasteModal = () => {
     provider = new BrowserProvider(window.ethereum);
   }
 
+  const signer = provider?.getSigner()
   
 
   const wallet = getWallet(process.env.NEXT_PUBLIC_WALLET_PRIVATE_KEY);
@@ -61,6 +62,7 @@ const AddWasteModal = () => {
     wasteInsure.address,
     wasteInsure.abi,
     wallet
+    // signer
   );
 
   

@@ -15,14 +15,14 @@ const WasteList = () => {
   const { data: data } = useReadContract({
     abi: wasteInsure.abi,
     address: wasteInsure.address,
-    functionName: "getWasteLenght",
+    functionName: "getWasteLength",
     args: [],
   });
 
   // convert data to number
   const wasteLength = data? Number(data.toString()) : 0;
 
-  console.log(data)
+  console.log(data, "wasteLength")
 
   // states of the errors
   const [error, setError] = useState('');
@@ -30,7 +30,6 @@ const WasteList = () => {
   const [loading, setLoading] = useState("");
   const [searchQuery, setSearchQuery] = useState("")
 
-  // define a clear error function
 
   const clearmessage = () => {
     setError('');

@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from "react";
 import { IoCloseCircle } from "react-icons/io5";
 import { toast } from "react-toastify";
@@ -40,12 +41,13 @@ const AddHospitalModal = () => {
 
   
 
-  const wallet = getWallet(process.env.NEXT_PUBLIC_WALLET_PRIVATE_KEY);
+  // const wallet = getWallet(process.env.NEXT_PUBLIC_WALLET_PRIVATE_KEY);
 
+  const signer = provider?.getSigner()
   const contractWasteInsured = new ethers.Contract(
     wasteInsure.address,
     wasteInsure.abi,
-    wallet
+    signer
   );
 
   const paymasterParams = utils.getPaymasterParams(Generatepayment.address, {
