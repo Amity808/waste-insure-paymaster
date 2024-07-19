@@ -6,7 +6,7 @@ import { truuncateAddress } from "../../utils";
 import { FaCopy } from "react-icons/fa";
 import { useWriteContract, useReadContract, useSimulateContract } from "wagmi";
 import { wasteInsure } from "@/abi/wasteInsured";
-const HospitalCard = ({ id, setError, setLoading, clear }) => {
+const HospitalCard = ({ id, setError, setLoading, clear, searchQuery }) => {
   const { address } = useAccount();
  
   const { data: getHospitalInfo } = useReadContract({
@@ -47,6 +47,11 @@ const HospitalCard = ({ id, setError, setLoading, clear }) => {
     toast.success(`Address copied ${hospital.walletAddress}`)
 
   }
+
+  if (searchQuery != "" && !hospital.name.toLocaleLowerCase()
+    .includes(searchQuery.toLocaleLowerCase().trim())){
+      return null;
+    }
   return (
     <div className=" w-96 bg-[#EFAE07] text-base font-semibold rounded-xl">
       <img src={hospital.imagehos} alt="" className=" w-full" />

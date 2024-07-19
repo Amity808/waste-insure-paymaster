@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import HospitalCard from "../Cards/HospitalCard";
 import { useReadContract } from 'wagmi';
 import { wasteInsure } from '@/abi/wasteInsured';
+import HospitalFilter from "../HospitalFilter";
 
 const HospitalList = () => {
   
@@ -12,6 +13,11 @@ const HospitalList = () => {
     functionName: "hospitalCounter",
     args: [],
   });
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const handleSearch = (query) => {
+    setSearchQuery(query)
+  }
 
   const hospitalLength = data ? Number(data.toString()) : 0;
   console.log(data)
@@ -23,13 +29,14 @@ const HospitalList = () => {
 
     for (let i = 0; i < hospitalLength; i++){
       registerPartner.push(
-        <HospitalCard key={i} id={i} />
+        <HospitalCard key={i} id={i} searchQuery={searchQuery} />
       )
     }
     return registerPartner;
   };
   return (
     <div>
+      <HospitalFilter onSearch={handleSearch} />
       <div className=' mx-auto max-w-4xl py-5 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8'>
           <div className='grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8'>
             {getHospitalLength()}
