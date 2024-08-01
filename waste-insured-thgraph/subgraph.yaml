@@ -1,0 +1,41 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: WasteInsured
+    network: zksync-era-sepolia
+    source:
+      address: "0xeE571028e2889e4e0a4c10Ad60Fbf177A2932462"
+      abi: WasteInsured
+      startBlock: 3238407
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - FundsDeposited
+        - FundsWithdrawn
+        - HospitalRegistered
+        - PaymentSent
+        - WasteRecorded
+        - WasteValidated
+      abis:
+        - name: WasteInsured
+          file: ./abis/WasteInsured.json
+      eventHandlers:
+        - event: FundsDeposited(indexed address,uint256)
+          handler: handleFundsDeposited
+        - event: FundsWithdrawn(indexed address,uint256)
+          handler: handleFundsWithdrawn
+        - event: HospitalRegistered(indexed uint256,string,string,string,address)
+          handler: handleHospitalRegistered
+        - event: PaymentSent(indexed address,uint256)
+          handler: handlePaymentSent
+        - event: WasteRecorded(indexed uint256,indexed address,string,string,string,uint256,uint256,address)
+          handler: handleWasteRecorded
+        - event: WasteValidated(indexed uint256,indexed address)
+          handler: handleWasteValidated
+      file: ./src/contracts-waste-insured-waste-insured-sol-waste-insured.ts

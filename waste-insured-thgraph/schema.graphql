@@ -1,0 +1,62 @@
+type FundsDeposited @entity(immutable: true) {
+  id: Bytes!
+  wasteAdmin: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FundsWithdrawn @entity(immutable: true) {
+  id: Bytes!
+  wasteAdmin: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type HospitalRegistered @entity(immutable: true) {
+  id: Bytes!
+  hospitalId: BigInt! # uint256
+  name: String! # string
+  location: String! # string
+  hospitalType: String! # string
+  walletAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PaymentSent @entity(immutable: true) {
+  id: Bytes!
+  recipient: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type WasteRecorded @entity(immutable: true) {
+  id: Bytes!
+  wasteId: BigInt! # uint256
+  producer: Bytes! # address
+  depositor: String! # string
+  wasteType: String! # string
+  collectionLocation: String! # string
+  weight: BigInt! # uint256
+  wasteAmount: BigInt! # uint256
+  hospitalAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type WasteValidated @entity(immutable: true) {
+  id: Bytes!
+  wasteId: BigInt! # uint256
+  wasteAdmin: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
