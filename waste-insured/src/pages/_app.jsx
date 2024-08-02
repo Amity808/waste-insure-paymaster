@@ -12,7 +12,7 @@ import "@/styles/globals.css";
 import { celo, celoAlfajores, zkSyncSepoliaTestnet, zkSync } from "wagmi/chains";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
+import Providers from "@/provider/provider"
 const connectors = connectorsForWallets(
     [
         {
@@ -55,7 +55,9 @@ function App({ Component, pageProps }) {
                         theme="light"
                     />
                     <Layout>
+                        <Providers>
                         <Component {...pageProps} />
+                        </Providers>
                     </Layout>
                 </RainbowKitProvider>
             </QueryClientProvider>
