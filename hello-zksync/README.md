@@ -49,3 +49,10 @@ Important: zkSync In-memory Node currently supports only the L2 node. If contrac
 ## License
 
 This project is under the [MIT](./LICENSE) license.
+
+"MyERC20Token" was successfully deployed:
+ - Contract address: 0xf76D7D11Ce66e54c4fCa08c61d8C37987A29E29e
+ - Contract source: contracts/erc20/MyERC20Token.sol:MyERC20Token
+ - Encoded constructor arguments: 0x
+
+Requesting contract verification...
