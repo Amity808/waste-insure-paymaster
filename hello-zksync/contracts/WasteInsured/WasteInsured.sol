@@ -38,6 +38,14 @@ contract WasteInsured {
         address payable walletAddress;
     }
 
+    struct TokenConfig {
+        bool status;
+        uint256 fee;
+        uint256 balance;
+    }
+
+    mapping(address => TokenConfig) public _allowedTokens;
+
     // Mapping to store waste records
     mapping(uint256 => Waste) public wasteRecords;
     uint256 public wasteCounter;
@@ -186,6 +194,28 @@ contract WasteInsured {
             hospital.hospitalType,
             hospital.walletAddress
         );
+    }
+
+    function addNewToken(
+        address token,
+        uint256 fee,
+        uint256 balance
+    ) external onlyWasteAdmin {
+        require(!_allowedTokens[token].status, "Token already exists");
+        _allowedTokens[token] = TokenConfig(true, fee, balance);
+    }
+    function editToken(
+        address token,
+        uint256 fee,
+        uint256 balance
+    ) external onlyWasteAdmin {
+        require(_allowedTokens[token].status, "Token does not exist");
+        _allowedTokens[token] = TokenConfig(true, fee, balance);
+    }
+
+    function removeToken(address token) external onlyWasteAdmin {
+        require(_allowedTokens[token].status, "Token does not exist");
+        delete _allowedTokens[token];
     }
 
     // Fallback function to receive funds
