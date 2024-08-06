@@ -68,6 +68,9 @@ contract WasteInsured {
     event FundsWithdrawn(address indexed wasteAdmin, uint256 amount);
     event FundsDeposited(address indexed wasteAdmin, uint256 amount);
     event HospitalRegistered(uint256 indexed hospitalId, string name, string location, string hospitalType, address walletAddress);
+    event AddNewToken(address token, uint256 fee, uint256 balance);
+    event EditToken(address token, uint256 fee, uint256 balance);
+    event DeleteToken(address token);
 
     // Modifier to restrict access to assigned producers
     modifier onlyCollector() {
@@ -203,6 +206,8 @@ contract WasteInsured {
     ) external onlyWasteAdmin {
         require(!_allowedTokens[token].status, "Token already exists");
         _allowedTokens[token] = TokenConfig(true, fee, balance);
+        emit AddNewToken(token, fee, balance);
+
     }
     function editToken(
         address token,
@@ -211,11 +216,15 @@ contract WasteInsured {
     ) external onlyWasteAdmin {
         require(_allowedTokens[token].status, "Token does not exist");
         _allowedTokens[token] = TokenConfig(true, fee, balance);
+        // address,uint256, uint256
+        emit EditToken(token, fee, balance);
     }
 
     function removeToken(address token) external onlyWasteAdmin {
         require(_allowedTokens[token].status, "Token does not exist");
         delete _allowedTokens[token];
+
+        emit DeleteToken(token);
     }
 
     // Fallback function to receive funds
