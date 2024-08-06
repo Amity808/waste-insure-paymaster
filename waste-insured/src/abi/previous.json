@@ -1,6 +1,5 @@
-export const wasteInsure = {
-  "address": "0x5fbE56b4F7EF2647eA1787495628dD404AB88A0D",
-  "abi": [
+{
+    "abi": [
     {
       "inputs": [],
       "stateMutability": "nonpayable",
@@ -601,5 +600,5 @@ export const wasteInsure = {
       "stateMutability": "payable",
       "type": "receive"
     }
-  ],
-} as const 
+  ]
+}

@@ -12,6 +12,8 @@ const AllToken = () => {
         <th>Token Address</th>
         <th>Is Active</th>
         <th>Fee</th>
+        <th>Update</th>
+        <th>Delete</th>
       </tr>
     </thead>
     <tbody>
