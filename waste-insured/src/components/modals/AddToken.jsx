@@ -21,14 +21,12 @@ const AddToken = () => {
   const [Balance, setBalance] = useState("")
 
   const isFormFilled =
-    name && image && Location && hospitalType && walletAddress;
+    tokenAddress && fee && Balance
 
   const handleClear = () => {
-    setName("");
-    setImage("");
-    setLocation("");
-    setHospitalType("");
-    setWalletAddress("");
+    setTokenAddress("")
+    setFee("")
+    setBalance("")
   };
 
   
