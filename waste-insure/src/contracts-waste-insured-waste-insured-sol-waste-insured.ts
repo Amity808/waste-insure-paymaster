@@ -1,4 +1,7 @@
 import {
+  AddNewToken as AddNewTokenEvent,
+  DeleteToken as DeleteTokenEvent,
+  EditToken as EditTokenEvent,
   FundsDeposited as FundsDepositedEvent,
   FundsWithdrawn as FundsWithdrawnEvent,
   HospitalRegistered as HospitalRegisteredEvent,
@@ -7,6 +10,9 @@ import {
   WasteValidated as WasteValidatedEvent
 } from "../generated/WasteInsured/WasteInsured"
 import {
+  AddNewToken,
+  DeleteToken,
+  EditToken,
   FundsDeposited,
   FundsWithdrawn,
   HospitalRegistered,
@@ -14,6 +20,49 @@ import {
   WasteRecorded,
   WasteValidated
 } from "../generated/schema"
+
+export function handleAddNewToken(event: AddNewTokenEvent): void {
+  let entity = new AddNewToken(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.token = event.params.token
+  entity.fee = event.params.fee
+  entity.balance = event.params.balance
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleDeleteToken(event: DeleteTokenEvent): void {
+  let entity = new DeleteToken(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.token = event.params.token
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleEditToken(event: EditTokenEvent): void {
+  let entity = new EditToken(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.token = event.params.token
+  entity.fee = event.params.fee
+  entity.balance = event.params.balance
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
 
 export function handleFundsDeposited(event: FundsDepositedEvent): void {
   let entity = new FundsDeposited(

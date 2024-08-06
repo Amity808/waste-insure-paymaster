@@ -8,14 +8,17 @@ dataSources:
     name: WasteInsured
     network: zksync-era-sepolia
     source:
-      address: "0xeE571028e2889e4e0a4c10Ad60Fbf177A2932462"
+      address: "0x16fEa7bb57b017c001cE38705d8B6AF7e0ff1c89"
       abi: WasteInsured
-      startBlock: 3238407
+      startBlock: 3576862
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
+        - AddNewToken
+        - DeleteToken
+        - EditToken
         - FundsDeposited
         - FundsWithdrawn
         - HospitalRegistered
@@ -26,6 +29,12 @@ dataSources:
         - name: WasteInsured
           file: ./abis/WasteInsured.json
       eventHandlers:
+        - event: AddNewToken(address,uint256,uint256)
+          handler: handleAddNewToken
+        - event: DeleteToken(address)
+          handler: handleDeleteToken
+        - event: EditToken(address,uint256,uint256)
+          handler: handleEditToken
         - event: FundsDeposited(indexed address,uint256)
           handler: handleFundsDeposited
         - event: FundsWithdrawn(indexed address,uint256)

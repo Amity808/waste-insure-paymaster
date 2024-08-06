@@ -1,3 +1,31 @@
+type AddNewToken @entity(immutable: true) {
+  id: Bytes!
+  token: Bytes! # address
+  fee: BigInt! # uint256
+  balance: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DeleteToken @entity(immutable: true) {
+  id: Bytes!
+  token: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EditToken @entity(immutable: true) {
+  id: Bytes!
+  token: Bytes! # address
+  fee: BigInt! # uint256
+  balance: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
 type FundsDeposited @entity(immutable: true) {
   id: Bytes!
   wasteAdmin: Bytes! # address
