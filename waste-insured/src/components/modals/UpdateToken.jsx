@@ -160,7 +160,7 @@ const UpdateToken = () => {
                 <button
                   type="submit"
                   className=" border-4 text-white border-[#EFAE07] bg-[#06102b] px-4 py-2 rounded-full"
-                  disabled={!!loading || !isFormFilled || !addHospital}
+                  disabled={!!loading || !isFormFilled || !addToken}
                 >
                   {loading ? loading : "Register partner"}
                 </button>
