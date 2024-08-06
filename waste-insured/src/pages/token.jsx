@@ -1,12 +1,14 @@
 import React from 'react'
 import AddToken from '@/components/modals/AddToken'
+import AllToken from "@/components/ListCards/AllToken"
 
-const AllToken = () => {
+const TokenPage = () => {
   return (
     <div>
         <AddToken />
+        <AllToken />
     </div>
   )
 }
 
-export default AllToken
+export default TokenPage

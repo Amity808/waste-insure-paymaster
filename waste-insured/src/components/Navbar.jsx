@@ -27,6 +27,9 @@ export default function Navbar() {
           <h3 className="text-[#282e82] text-sm font-normal leading-none">
             <Link href="/hospital">Hospital</Link>
           </h3>
+          <h3 className="text-[#282e82] text-sm font-normal leading-none">
+            <Link href="/token">Hospital</Link>
+          </h3>
         </div>
         <div className="hidden  sm:flex mt-[20px] ">
           <ConnectWallet />
@@ -59,6 +62,9 @@ export default function Navbar() {
           </h3>
           <h3 className="text-white text-sm font-normal leading-none">
             <Link href="/dashboard">Dashboard</Link>
+          </h3>
+          <h3 className="text-white text-sm font-normal leading-none">
+            <Link href="/token">Dashboard</Link>
           </h3>
 
           <div className="flex">
