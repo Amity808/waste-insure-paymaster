@@ -6,13 +6,13 @@ import { ethers } from "ethers";
 import { wasteInsure } from "@/abi/wasteInsured";
 import { Generatepayment } from "@/abi/GeneralPayment";
 import { utils, BrowserProvider } from "zksync-ethers";
-import { getWallet } from "../../utils/getwallet";
-import { useRouter } from "next/navigation";
+// import { getWallet } from "../../utils/getwallet";
+// import { useRouter } from "next/navigation";
 
 
 const AddToken = () => {
 
-  const router = useRouter()
+  
   const [toggle, setToggle] = useState(false);
   const [loading, setLoading] = useState('')
   
