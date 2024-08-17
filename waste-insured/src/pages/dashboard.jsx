@@ -8,7 +8,7 @@ import Data from "@/components/Data"
       <div className=" ml-60 text-2xl py-10  max-sm:ml-0 max-md:ml-0">
         <div>
           <WasteList />
-          <Data />
+          {/* <Data /> */}
         </div>
       </div>
     </div>
