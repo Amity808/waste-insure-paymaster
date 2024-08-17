@@ -1,9 +1,6 @@
 'use client'
 import React, {useState} from 'react'
 import WasteCard from '@/components/Cards/WasteCard'
-import ErrorAlert from '../alerts/ErrorAlert';
-import OnSuccessAlert from '../alerts/OnSuccessAlert';
-import LoadingAlert from '../alerts/LoadingAlert';
 import WasteFilter from '../WasteFilter'
 import { useReadContract } from 'wagmi';
 import { wasteInsure } from '@/abi/wasteInsured';

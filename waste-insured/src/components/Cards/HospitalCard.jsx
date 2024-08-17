@@ -4,7 +4,7 @@ import { useAccount } from "wagmi";
 import { toast } from "react-toastify";
 import { truuncateAddress } from "../../utils";
 import { FaCopy } from "react-icons/fa";
-import { useWriteContract, useReadContract, useSimulateContract } from "wagmi";
+import { useReadContract } from "wagmi";
 import { wasteInsure } from "@/abi/wasteInsured";
 const HospitalCard = ({ id, setError, setLoading, clear, searchQuery }) => {
   const { address } = useAccount();
