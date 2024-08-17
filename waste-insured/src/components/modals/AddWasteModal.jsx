@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { IoCloseCircle } from "react-icons/io5";
-import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { toast } from "react-toastify";
 import { wasteInsure } from "@/abi/wasteInsured";
 import { gaslessPaymasterContract } from "../../abi/paymaster-contract";
 import { ethers } from "ethers";
 import { Generatepayment } from "@/abi/GeneralPayment";
-
+import { getGeneralPaymasterInput } from "viem/zksync";
 import { useAccount } from "wagmi";
 import { utils, BrowserProvider } from "zksync-ethers";
 import { getWallet } from "../../utils/getwallet";
 import { useWriteContract, useSimulateContract, useReadContract } from "wagmi";
+import { walletClient } from "@/helper/wagmiconfig";
 
 const AddWasteModal = () => {
   const [name, setName] = useState("");
@@ -24,7 +25,7 @@ const AddWasteModal = () => {
   const [loading, setLoading] = useState("");
 
   const { address } = useAccount();
-  // to open the connect modal 
+  // to open the connect modal
   const { openConnectModal } = useConnectModal();
 
   // to check if the form is filled
@@ -53,8 +54,7 @@ const AddWasteModal = () => {
     provider = new BrowserProvider(window.ethereum);
   }
 
-  const signer = provider?.getSigner()
-  
+  const signer = provider?.getSigner();
 
   const wallet = getWallet(process.env.NEXT_PUBLIC_WALLET_PRIVATE_KEY);
 
@@ -65,63 +65,70 @@ const AddWasteModal = () => {
     // signer
   );
 
-  
   const paymasterParams = utils.getPaymasterParams(Generatepayment.address, {
     type: "General",
     innerInput: new Uint8Array(),
   });
 
-
   const addwastepromise = async () => {
     // e.preventDefault();
     // try {
-      
-      // setLoading("Record.....");
-      // toast.loading("Record.....")
-      if (!isFormFilled) throw new Error("Please fill the correct details");
-  
-      let paymasterBalance = await provider.getBalance(Generatepayment.address);
-  
-      console.log("Balance paymaster ", paymasterBalance.toString());
-  
-      const wasteAmountInBigInt = BigInt(Math.round(wasteAmount * 1000000));
-      const result = await contractWasteInsured.recordWaste(
+
+    // setLoading("Record.....");
+    // toast.loading("Record.....")
+    if (!isFormFilled) throw new Error("Please fill the correct details");
+
+    let paymasterBalance = await provider.getBalance(Generatepayment.address);
+
+    console.log("Balance paymaster ", paymasterBalance.toString());
+
+    const [account] =
+      typeof window !== "undefined" && window.ethereum
+        ? await window.ethereum.request({ method: "eth_requestAccounts" }) // Request accounts if in a browser with Ethereum provider
+        : [];
+
+    if (!account) {
+      throw new Error("No account found. Please connect your wallet."); // Throw an error if no account is found
+    }
+
+    const wasteAmountInBigInt = BigInt(Math.round(wasteAmount * 1000000));
+
+    const response = await walletClient.writeContract({
+      address: wasteInsure.address,
+      abi: wasteInsure.abi,
+      functionName: "recordWaste",
+      args: [
         name,
         wasteType,
         collectionLocation,
         weight,
         wasteAmountInBigInt,
         hospitalAddress,
-        {
-          customData: {
-            gasPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
-            paymasterParams: paymasterParams,
-          },
-        }
-      );
-      await result.wait()
-      console.log(result, " result");
-      toast.success("Waste Recorded")
-      console.log("Afer paymaster ", paymasterBalance.toString());
-      handleClear();
+      ],
+      account,
+      paymaster: Generatepayment.address,
+      paymasterInput: getGeneralPaymasterInput({
+        innerInput: new Uint8Array(),
+      }),
+    });
+    console.log(response, " result");
+    toast.success("Waste Recorded");
+    console.log("Afer paymaster ", paymasterBalance.toString());
+    handleClear();
     // } catch (error) {
-      // console.log(error," error");
+    // console.log(error," error");
     //   toast.error("Something Went wrong. Try record waste, ");
     // }
+  };
 
-  }
- 
-
-
-
-  
   const addwaste = async (e) => {
     e.preventDefault();
     try {
       await toast.promise(addwastepromise(), {
         pending: "Recording waste",
         success: "Waste Recorded",
-        error: "Error Recording Waste, you are not a Collector or insuccificient gas fee in bootloader",
+        error:
+          "Error Recording Waste, you are not a Collector or insuccificient gas fee in bootloader",
       });
     } catch (e) {
       console.log({ e });

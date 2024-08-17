@@ -6,8 +6,9 @@ import { ethers } from "ethers";
 import { wasteInsure } from "@/abi/wasteInsured";
 import { Generatepayment } from "@/abi/GeneralPayment";
 import { utils, BrowserProvider } from "zksync-ethers";
-import { getWallet } from "../../utils/getwallet";
 import { useRouter } from "next/navigation";
+import { getGeneralPaymasterInput } from "viem/zksync";
+import { walletClient } from "@/helper/wagmiconfig";
 
 
 const AddHospitalModal = () => {
@@ -73,6 +74,15 @@ const AddHospitalModal = () => {
 
     console.log("Balance paymaster ", paymasterBalance.toString());
 
+    const [account] =
+      typeof window !== "undefined" && window.ethereum
+        ? await window.ethereum.request({ method: "eth_requestAccounts" }) // Request accounts if in a browser with Ethereum provider
+        : [];
+
+    if (!account) {
+      throw new Error("No account found. Please connect your wallet."); // Throw an error if no account is found
+    }
+
     await contractWasteInsured.registerPartnerHospital(
         name,
         image,
@@ -86,6 +96,26 @@ const AddHospitalModal = () => {
           },
         }
       );
+
+      const response = await walletClient.writeContract({
+        address: wasteInsure.address,
+        abi: wasteInsure.abi,
+        functionName: "recordWaste",
+        args: [
+          name,
+        image,
+        Location,
+        hospitalType,
+        walletAddress,
+        ],
+        account,
+        paymaster: Generatepayment.address,
+        paymasterInput: getGeneralPaymasterInput({
+          innerInput: new Uint8Array(),
+        }),
+      });
+
+
     setLoading("waiting for comfirmation")
     // toast.loading("Waiting for comfirmation")
 

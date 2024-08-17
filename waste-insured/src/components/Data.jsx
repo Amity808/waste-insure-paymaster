@@ -3,20 +3,26 @@
 import { useQuery } from '@tanstack/react-query'
 import { gql, request } from 'graphql-request'
 const query = gql`{
-  fundsDepositeds(first: 5) {
+  wasteRecordeds(first: 5) {
     id
-    wasteAdmin
-    amount
-    blockNumber
-  }
-  fundsWithdrawns(first: 5) {
-    id
-    wasteAdmin
-    amount
-    blockNumber
-  }
-}`
-const url = 'https://api.studio.thegraph.com/query/85337/waste-insured/version/latest'
+    wasteId
+    producer
+    depositor
+    wasteType
+    collectionLocation
+    weight
+    wasteAmount
+    hospitalAddress
+    }
+    fundsWithdrawns(first: 5) {
+      id
+      wasteAdmin
+      amount
+      blockNumber
+      }
+      }`
+      // blockNumber
+const url = 'https://api.studio.thegraph.com/query/85337/waste-insure/version/latest'
 export default function Data() {
   // the data is already pre-fetched on the server and immediately available here,
   // without an additional network call
