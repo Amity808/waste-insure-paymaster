@@ -3,7 +3,7 @@ import { wasteMarkeplace } from "@/abi/wastemarketplaceAbi"
 import { useReadContract } from "wagmi";
 import { useAccount } from "wagmi";
 import Link from 'next/link';
-
+import { identicontemplates } from '@/helper/identicontemplates ';
 const Product = ({ id }) => {
     const { data: readProduct } = useReadContract({
         abi: wasteMarkeplace.abi,
@@ -60,7 +60,7 @@ const Product = ({ id }) => {
           href={`https://sepolia.explorer.zksync.io/address/${product?.owner}`}
           className={"absolute -mt-7 ml-6 h-16 w-16 rounded-full"}
         >
-          {/* {identicontemplates(product?.owner)} */}
+          {identicontemplates(product?.owner)}
         </Link>
       </div>
 
