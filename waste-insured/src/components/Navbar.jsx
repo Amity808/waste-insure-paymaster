@@ -28,7 +28,10 @@ export default function Navbar() {
             <Link href="/hospital">Hospital</Link>
           </h3>
           <h3 className="text-[#282e82] text-sm font-normal leading-none">
-            <Link href="/token">Hospital</Link>
+            <Link href="/market">Market</Link>
+          </h3>
+          <h3 className="text-[#282e82] text-sm font-normal leading-none">
+            <Link href="/token">token</Link>
           </h3>
         </div>
         <div className="hidden  sm:flex mt-[20px] ">

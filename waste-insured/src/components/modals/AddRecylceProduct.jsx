@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import useLoading from "@/hooks/useLoading";
 import { IoCloseCircle } from "react-icons/io5";import { wasteMarkeplace } from "@/abi/wastemarketplaceAbi"
-import { walletClient } from "@/helper/wagmiconfig";
+import { walletClient, publicClient } from "@/helper/wagmiconfig";
 import { toast } from "react-toastify";
 import { getGeneralPaymasterInput } from "viem/zksync"
 const AddRecylceProduct = () => {
@@ -26,45 +26,69 @@ const paymaster = '0x7afF0B53fe17231195968869c39B1D33599eDaB1'
   };
 
   const handleWrite = async () => {
+
+    const [account] =
+      typeof window !== "undefined" && window.ethereum
+        ? await window.ethereum.request({ method: "eth_requestAccounts" }) // Request accounts if in a browser with Ethereum provider
+        : [];
+
+    if (!account) {
+      throw new Error("No account found. Please connect your wallet."); // Throw an error if no account is found
+    }
+
+    const {request} = publicClient.simulateContract({
+        address: wasteMarkeplace.address,
+            abi: wasteMarkeplace.abi,
+            functionName: "writeProduct",
+            args: [productName, productImage, description, location, price, quantity],
+            account,
+            paymaster: paymaster,
+            paymasterInput: getGeneralPaymasterInput({ innerInput: new Uint8Array() }),
+    })
     try {
         const response = await walletClient.writeContract({
+            // ...request
             address: wasteMarkeplace.address,
             abi: wasteMarkeplace.abi,
-            functionName: "",
-            args: [],
+            functionName: "writeProduct",
+            args: [productName, productImage, description, location, price, quantity],
+            account,
             paymaster: paymaster,
-          paymasterInput: getGeneralPaymasterInput({ innerInput: new Uint8Array() }),
+            paymasterInput: getGeneralPaymasterInput({ innerInput: new Uint8Array() }),
         })
+        console.log(response)
         // toast.success("Product added successfully!");
     } catch (error) {
         console.log(error)
     }
   }
+  console.log(isLoading)
   const saveProduct = async (e) => {
     e.preventDefault();
     startLoading();
     try {
       
-        await handleWrite();
-        toast.promise(
-            await handleWrite(), {
+        // await handleWrite();
+       await toast.promise(
+            handleWrite(), {
                 pending: "Adding Product",
                 success: "Product added successfully!",
-                error: "Error adding product",
+                error: "Unexpected error contact Admin",
   
             }
         )
-      
-      stopLoading();
+        clearFormInput()
+        stopLoading();
     } catch (error) {
       stopLoading();
+      console.log(error)
     }
   };
 
 
 
   return (
-    <div className="flex mb-10">
+    <div className="flex mb-10 ">
       <button
         id="modalBioDate"
         type="button"
@@ -117,7 +141,7 @@ const paymaster = '0x7afF0B53fe17231195968869c39B1D33599eDaB1'
 
               <div className="mb-8">
                 <input
-                  type="number"
+                  type="test"
                   onChange={(e) => setLocation(e.target.value)}
                   className=" border-4 w-full border-[#EFAE07] px-4 py-2 rounded-xl"
                   name="location"
@@ -151,7 +175,7 @@ const paymaster = '0x7afF0B53fe17231195968869c39B1D33599eDaB1'
                   className=" border-4 text-white border-[#EFAE07] bg-[#06102b] px-4 py-2 rounded-full"
                   // disabled={!!loading || !isFormFilled || !recordWaste}
                 >
-                  {loading ? loading : "Save"}
+                  { "Save"}
                 </button>
                 <button type="button" onClick={() => setToggle(false)}>
                   <IoCloseCircle size={30} color="#06102b" />

@@ -4,6 +4,7 @@ import AddWasteModal from '@/components/modals/AddWasteModal'
 import SetCollectorModal from '@/components/modals/SetCollectorModal';
 import AddHospitalModal from '@/components/modals/AddHospitalModal';
 import { FaBars, FaTimes } from "react-icons/fa";
+import BecomeSeller from './modals/BecomeSeller';
 
 export default function SideBar() {
     const [toggle, setToggle] = useState(false)
@@ -19,6 +20,7 @@ export default function SideBar() {
             <SetCollectorModal />
             <AddWasteModal />
             <AddHospitalModal />
+            <BecomeSeller />
         </div>
     <div className="md:hidden  mt-3 ml-10">
     <h1 className=' text-3xl font-bold max-sm:text-xl text-blue-950 mr-5 my-6'>Dashboard</h1>
