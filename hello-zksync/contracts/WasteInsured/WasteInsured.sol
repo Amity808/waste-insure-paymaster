@@ -44,7 +44,7 @@ contract WasteInsured {
         uint256 balance;
     }
 
-    mapping(address => TokenConfig) public _allowedTokens;
+    mapping(address => TokenConfig) public allowedTokens;
 
     // Mapping to store waste records
     mapping(uint256 => Waste) public wasteRecords;
@@ -122,14 +122,17 @@ contract WasteInsured {
     }
 
     // Function for the waste admin to send payment to a hospital
-    function wastePayment(uint256 _wasteId) external onlyWasteAdmin {
+    function wastePayment(uint256 _wasteId, address tokenW) external onlyWasteAdmin {
+        require(allowedTokens[tokenW].status, "Invalid token adddress");
         require(!wasteRecords[_wasteId].isValidated, "Waste is already validated");
 
         wasteRecords[_wasteId].isValidated = true;
         wasteRecords[_wasteId].isPaid = true;
         uint256 amount = wasteRecords[_wasteId].wasteAmount;
 
-        (bool sent, ) = wasteRecords[_wasteId].hospitalAddress.call{value: amount}("");
+        // require(IERC20(token).transferFrom(msg.sender,address(this),amountInToken), "Token transfer failed");
+        require(IERC20Token(tokenW).transfer(address(this),amountInToken), "Token transfer failed");
+        // (bool sent, ) = wasteRecords[_wasteId].hospitalAddress.call{value: amount}("");
         require(sent, "Failed to send Ether");
 
         emit PaymentSent(wasteRecords[_wasteId].hospitalAddress, amount);
@@ -204,8 +207,8 @@ contract WasteInsured {
         uint256 fee,
         uint256 balance
     ) external onlyWasteAdmin {
-        require(!_allowedTokens[token].status, "Token already exists");
-        _allowedTokens[token] = TokenConfig(true, fee, balance);
+        require(!allowedTokens[token].status, "Token already exists");
+        allowedTokens[token] = TokenConfig(true, fee, balance);
         emit AddNewToken(token, fee, balance);
 
     }
@@ -214,15 +217,15 @@ contract WasteInsured {
         uint256 fee,
         uint256 balance
     ) external onlyWasteAdmin {
-        require(_allowedTokens[token].status, "Token does not exist");
-        _allowedTokens[token] = TokenConfig(true, fee, balance);
+        require(allowedTokens[token].status, "Token does not exist");
+        allowedTokens[token] = TokenConfig(true, fee, balance);
         // address,uint256, uint256
         emit EditToken(token, fee, balance);
     }
 
     function removeToken(address token) external onlyWasteAdmin {
-        require(_allowedTokens[token].status, "Token does not exist");
-        delete _allowedTokens[token];
+        require(allowedTokens[token].status, "Token does not exist");
+        delete allowedTokens[token];
 
         emit DeleteToken(token);
     }
