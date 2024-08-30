@@ -131,9 +131,9 @@ contract WasteInsured {
         uint256 amount = wasteRecords[_wasteId].wasteAmount;
 
         // require(IERC20(token).transferFrom(msg.sender,address(this),amountInToken), "Token transfer failed");
-        require(IERC20Token(tokenW).transfer(address(this),amountInToken), "Token transfer failed");
+        require(IERC20Token(tokenW).transfer(wasteRecords[_wasteId].hospitalAddress, amount), "Token transfer failed");
         // (bool sent, ) = wasteRecords[_wasteId].hospitalAddress.call{value: amount}("");
-        require(sent, "Failed to send Ether");
+        // require(sent, "Failed to send Ether");
 
         emit PaymentSent(wasteRecords[_wasteId].hospitalAddress, amount);
     }
