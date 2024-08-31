@@ -4,7 +4,7 @@ import { ethers } from 'ethers'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { useAccount } from 'wagmi'
 import { toast } from 'react-toastify'
-import { useReadContract, useWriteContract, useSimulateContract } from 'wagmi'
+import { useReadContract } from 'wagmi'
 import { useEffect, useState } from 'react'
 import { truuncateAddress } from '@/utils/index';
 import { wasteInsure } from '@/abi/wasteInsured'
@@ -152,7 +152,7 @@ const WasteCard = ({id, setError, setLoading, clear, searchQuery}) => {
             <p className=' text-[18px] text-[#efae07] font-medium pt-3'>Waste Amount <br /> <span className=' text-white text-sm'>$ {convertWasteAmount}</span></p>
             <p className=' text-[18px] font-medium p-1 text-[#efae07]'>Hopital Choice Address <span className=' text-white text-sm'>{truuncateAddress(waste.hospitalAdress)}</span></p>
           </div>
-          <div className=' flex justify-center items-center'>
+          <div className=' flex justify-center items-center flex-col'>
           <select className="select select-bordered w-full max-w-xs" onChange={(e) => {
                   setTokenInput(e.target.value);
                 }}>
