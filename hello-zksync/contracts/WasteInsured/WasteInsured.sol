@@ -45,10 +45,12 @@ contract WasteInsured {
     }
 
     mapping(address => TokenConfig) public allowedTokens;
+    mapping(uint256 => TokenConfig) public savedToken;
 
     // Mapping to store waste records
     mapping(uint256 => Waste) public wasteRecords;
     uint256 public wasteCounter;
+    uint256 tokenSaved;
 
     // Mapping to keep track of assigned point of collection
     mapping(address => bool) public assignedCollector;
@@ -209,6 +211,7 @@ contract WasteInsured {
     ) external onlyWasteAdmin {
         require(!allowedTokens[token].status, "Token already exists");
         allowedTokens[token] = TokenConfig(true, fee, balance);
+        savedToken[tokenSaved] = TokenConfig(true, fee, balance);
         emit AddNewToken(token, fee, balance);
 
     }
