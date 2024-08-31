@@ -1,3 +1,4 @@
+'use client'
 import React, {useCallback} from 'react'
 import { ethers } from 'ethers'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
@@ -19,6 +20,7 @@ const WasteCard = ({id, setError, setLoading, clear, searchQuery}) => {
 
   // to get the address that is connect to the dapp
   const { address } = useAccount();
+  const [tokenInput, setTokenInput] = useState("Token");
 // initializing providers
   let provider;
 
@@ -85,7 +87,7 @@ const WasteCard = ({id, setError, setLoading, clear, searchQuery}) => {
     let paymasterBalance = await provider.getBalance(Generatepayment.address);
 
     console.log("Balance paymaster ", paymasterBalance.toString());
-    await contractWasteInsured.wastePayment(id, {
+    await contractWasteInsured.wastePayment(id, tokenInput,{
         customData: {
             gasPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
             paymasterParams: paymasterParams,
@@ -151,6 +153,13 @@ const WasteCard = ({id, setError, setLoading, clear, searchQuery}) => {
             <p className=' text-[18px] font-medium p-1 text-[#efae07]'>Hopital Choice Address <span className=' text-white text-sm'>{truuncateAddress(waste.hospitalAdress)}</span></p>
           </div>
           <div className=' flex justify-center items-center'>
+          <select className="select select-bordered w-full max-w-xs" onChange={(e) => {
+                  setTokenInput(e.target.value);
+                }}>
+            <option disabled selected>Select the prefered payment</option>
+            <option value=''>USDC</option>
+            <option value=''>USDT</option>
+          </select>
             <button className=' bg-white py-2 px-2 rounded-lg font-medium text-blue-700 hover:text-white hover:bg-[#efae07] mt-5 mb-5' onClick={payment}>Transfer Payment</button>
           </div>
         </>

@@ -1,5 +1,5 @@
 export const wasteInsure = {
-  "address": "0x5fbE56b4F7EF2647eA1787495628dD404AB88A0D",
+  "address": "0x657d52c225Dfc9D6dDda3deE0f8E8fe3d8a7F7BA",
   "abi": [
     {
       "inputs": [],
@@ -241,11 +241,34 @@ export const wasteInsure = {
       "inputs": [
         {
           "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "fee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "name": "addNewToken",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
           "name": "",
           "type": "address"
         }
       ],
-      "name": "_allowedTokens",
+      "name": "allowedTokens",
       "outputs": [
         {
           "internalType": "bool",
@@ -264,29 +287,6 @@ export const wasteInsure = {
         }
       ],
       "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "token",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "fee",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "balance",
-          "type": "uint256"
-        }
-      ],
-      "name": "addNewToken",
-      "outputs": [],
-      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -659,6 +659,11 @@ export const wasteInsure = {
           "internalType": "uint256",
           "name": "_wasteId",
           "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "tokenW",
+          "type": "address"
         }
       ],
       "name": "wastePayment",
