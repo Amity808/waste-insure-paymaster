@@ -14,7 +14,8 @@ const Product = ({ id }) => {
 
       const [product, setProduct] = useState(null)
 
-
+      console.log(readProduct)
+      // https://blue-accused-trout-688.mypinata.cloud/ipfs/QmSPHEJ3GceoJZGp4YVKA6VGryt6Qfjh3XpCyZYpzP5LjV
     // format the product data get from the database contract
     const getFormatedProduct = useCallback(() => {
         if(!readProduct) return null;

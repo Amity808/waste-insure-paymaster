@@ -31,7 +31,7 @@ export default function Navbar() {
             <Link href="/market">Market</Link>
           </h3>
           <h3 className="text-[#282e82] text-sm font-normal leading-none">
-            <Link href="/token">token</Link>
+            <Link href="/token">Token</Link>
           </h3>
         </div>
         <div className="hidden  sm:flex mt-[20px] ">

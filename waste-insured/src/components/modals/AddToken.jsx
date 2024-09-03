@@ -150,7 +150,7 @@ const AddToken = () => {
                   className=" border-4 text-white border-[#EFAE07] bg-[#06102b] px-4 py-2 rounded-full"
                   disabled={!!loading || !isFormFilled || !addToken}
                 >
-                  {loading ? loading : "Register partner"}
+                  {loading ? loading : "Add Token"}
                 </button>
                 <button type="button" onClick={() => setToggle(false)}>
                   <IoCloseCircle size={30} color="#06102b" />

@@ -3,7 +3,6 @@ import { IoCloseCircle } from "react-icons/io5";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { toast } from "react-toastify";
 import { wasteInsure } from "@/abi/wasteInsured";
-import { gaslessPaymasterContract } from "../../abi/paymaster-contract";
 import { ethers } from "ethers";
 import { Generatepayment } from "@/abi/GeneralPayment";
 import { getGeneralPaymasterInput } from "viem/zksync";

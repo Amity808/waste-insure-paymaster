@@ -112,7 +112,7 @@ const paymaster = '0x7afF0B53fe17231195968869c39B1D33599eDaB1'
                 <input
                   type="text"
                   onChange={(e) => setProductName(e.target.value)}
-                  className="border-4 w-full  border-[#EFAE07] px-4 py-2 rounded-xl"
+                  className="border-4 w-full  border-[#EFAE07] px-4 py-2 rounded-xl text-white"
                   name="prudctname"
                   id="productname"
                   placeholder="Prodct Name"
@@ -122,7 +122,7 @@ const paymaster = '0x7afF0B53fe17231195968869c39B1D33599eDaB1'
                 <input
                   type="text"
                   onChange={(e) => setProductImage(e.target.value)}
-                  className="border-4 w-full  border-[#EFAE07] px-4 py-2 rounded-xl"
+                  className="border-4 w-full text-white border-[#EFAE07] px-4 py-2 rounded-xl"
                   name="ProductImage"
                   id="ProductImage"
                   placeholder="ProductImage"
@@ -133,7 +133,7 @@ const paymaster = '0x7afF0B53fe17231195968869c39B1D33599eDaB1'
                 <input
                   type="text"
                   onChange={(e) => setDescription(e.target.value)}
-                  className=" border-4 w-full border-[#EFAE07] px-4 py-2 rounded-xl"
+                  className=" border-4 w-full text-white border-[#EFAE07] px-4 py-2 rounded-xl"
                   name="description"
                   id="description"
                   placeholder="description"
@@ -144,7 +144,7 @@ const paymaster = '0x7afF0B53fe17231195968869c39B1D33599eDaB1'
                 <input
                   type="test"
                   onChange={(e) => setLocation(e.target.value)}
-                  className=" border-4 w-full border-[#EFAE07] px-4 py-2 rounded-xl"
+                  className=" border-4 w-full text-white border-[#EFAE07] px-4 py-2 rounded-xl"
                   name="location"
                   id="location"
                   placeholder="location"
@@ -154,7 +154,7 @@ const paymaster = '0x7afF0B53fe17231195968869c39B1D33599eDaB1'
                 <input
                   type="text"
                   onChange={(e) => setQuantity(e.target.value)}
-                  className=" border-4 w-full border-[#EFAE07] px-4 py-2 rounded-xl"
+                  className=" border-4 w-full text-white border-[#EFAE07] px-4 py-2 rounded-xl"
                   name="quantity"
                   id="quantity"
                   placeholder="quantity"
@@ -164,7 +164,7 @@ const paymaster = '0x7afF0B53fe17231195968869c39B1D33599eDaB1'
                 <input
                   type="text"
                   onChange={(e) => setPrice(e.target.value)}
-                  className=" border-4 w-full border-[#EFAE07] px-4 py-2 rounded-xl"
+                  className=" border-4 w-full text-white border-[#EFAE07] px-4 py-2 rounded-xl"
                   name="price"
                   id="price"
                   placeholder="price"

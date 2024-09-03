@@ -1,5 +1,5 @@
 export const wasteMarkeplace = {
-  "address": "0x0BbF8504C0D8606Db5850740e0c8204202772e9D",
+  "address": "0xbef9bc1Cc4FfF15B28FeCBc3aeE8914f0B70FBDF",
   "abi":  [
       {
         "inputs": [
