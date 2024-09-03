@@ -10,7 +10,6 @@ import { getGeneralPaymasterInput } from "viem/zksync";
 import { useAccount } from "wagmi";
 import { utils, BrowserProvider } from "zksync-ethers";
 import { getWallet } from "../../utils/getwallet";
-import { useWriteContract, useSimulateContract, useReadContract } from "wagmi";
 import { walletClient } from "@/helper/wagmiconfig";
 
 const AddWasteModal = () => {

@@ -8,6 +8,9 @@ import { Generatepayment } from "@/abi/GeneralPayment";
 import { utils, BrowserProvider } from "zksync-ethers";
 // import { getWallet } from "../../utils/getwallet";
 // import { useRouter } from "next/navigation";
+import { getGeneralPaymasterInput } from "viem/zksync";
+
+import { walletClient } from "@/helper/wagmiconfig";
 
 
 const AddToken = () => {
@@ -29,33 +32,6 @@ const AddToken = () => {
     setBalance("")
   };
 
-  
-  let provider;
-
-  if (typeof window !== "undefined" && window.ethereum) {
-    provider = new BrowserProvider(window.ethereum);
-  }
-
-  
-
-  // const wallet = getWallet(process.env.NEXT_PUBLIC_WALLET_PRIVATE_KEY);
-
-  const signer = provider?.getSigner()
-  const contractWasteInsured = new ethers.Contract(
-    wasteInsure.address,
-    wasteInsure.abi,
-    signer
-  );
-
-  const paymasterParams = utils.getPaymasterParams(Generatepayment.address, {
-    type: "General",
-    innerInput: new Uint8Array(),
-  });
-
-
-  
-
-
   const handleToken = async () => {
     // e.preventDefault()
     setLoading("Registering.....")
@@ -64,35 +40,47 @@ const AddToken = () => {
       throw new Error("Please fill the correct details")
     }
 
-    let paymasterBalance = await provider.getBalance(Generatepayment.address);
+    // let paymasterBalance = await provider.getBalance(Generatepayment.address);
 
-    console.log("Balance paymaster ", paymasterBalance.toString());
 
-    await contractWasteInsured.addNewToken(
-        tokenAddress, fee, Balance,
-        {
-          customData: {
-            gasPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
-            paymasterParams: paymasterParams,
-          },
-        }
-      );
-    setLoading("waiting for comfirmation")
-    // toast.loading("Waiting for comfirmation")
+    const [account] =
+    typeof window !== "undefined" && window.ethereum
+      ? await window.ethereum.request({ method: "eth_requestAccounts" }) // Request accounts if in a browser with Ethereum provider
+      : [];
 
-    setToggle(false)
-    handleClear()
+  if (!account) {
+    throw new Error("No account found. Please connect your wallet."); // Throw an error if no account is found
+  }
+
+  // const wasteAmountInBigInt = BigInt(Math.round(wasteAmount * 1000000));
+
+  const response = await walletClient.writeContract({
+    address: wasteInsure.address,
+    abi: wasteInsure.abi,
+    functionName: "addNewToken",
+    args: [
+      tokenAddress, fee, Balance
+    ],
+    account,
+    paymaster: Generatepayment.address,
+    paymasterInput: getGeneralPaymasterInput({
+      innerInput: new Uint8Array(),
+    }),
+  });
+  console.log(response, " result");
+  toast.success("Token added");
+  handleClear();
       
   }
 
-  const addHospital = async (e) => {
+  const addToken = async (e) => {
     e.preventDefault()
 
     try {
       await toast.promise(
         handleToken(),
         {
-          pending: "Adding New TOken",
+          pending: "Adding New Token",
           success: "Successfully added new TOken",
           error: "Error why registering, You must be a waste-Insured Admin, Contact Admin"
         }
@@ -124,7 +112,7 @@ const AddToken = () => {
           className="flex justify-center fixed left-0 top-0 items-center w-full h-full mt-6"
         >
           <div className="w-[600px] rounded-2xl bg-slate-100 p-5">
-            <form onSubmit={addHospital}>
+            <form onSubmit={addToken}>
               <div className="mb-8">
                 <input
                   type="text"
@@ -160,7 +148,7 @@ const AddToken = () => {
                 <button
                   type="submit"
                   className=" border-4 text-white border-[#EFAE07] bg-[#06102b] px-4 py-2 rounded-full"
-                  disabled={!!loading || !isFormFilled || !addHospital}
+                  disabled={!!loading || !isFormFilled || !addToken}
                 >
                   {loading ? loading : "Register partner"}
                 </button>

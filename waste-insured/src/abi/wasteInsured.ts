@@ -1,5 +1,6 @@
 export const wasteInsure = {
-  "address": "0x657d52c225Dfc9D6dDda3deE0f8E8fe3d8a7F7BA",
+  // "address": "0x657d52c225Dfc9D6dDda3deE0f8E8fe3d8a7F7BA",
+  "address": "0x5e5fF457B4e308B4fa204e83fA8d91ff0caD76Af",
   "abi": [
     {
       "inputs": [],

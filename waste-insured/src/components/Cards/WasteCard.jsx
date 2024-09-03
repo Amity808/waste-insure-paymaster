@@ -1,4 +1,4 @@
-'use client'
+// 'use client'
 import React, {useCallback} from 'react'
 import { ethers } from 'ethers'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
@@ -8,11 +8,13 @@ import { useReadContract } from 'wagmi'
 import { useEffect, useState } from 'react'
 import { truuncateAddress } from '@/utils/index';
 import { wasteInsure } from '@/abi/wasteInsured'
-import { getWallet } from '@/utils/getwallet'
-import { utils, BrowserProvider } from 'zksync-ethers'
 import { Generatepayment } from '@/abi/GeneralPayment'
-
-
+import { getGeneralPaymasterInput } from "viem/zksync";
+// import { walletClient } from '@/helper/wagmiconfig'
+// import { walletClient } from "@/helper/wagmiconfig";
+import { createWalletClient, custom, http } from "viem";
+import { eip712WalletActions } from "viem/zksync";
+import { zkSyncSepoliaTestnet } from "wagmi/chains";
 
 const WasteCard = ({id, setError, setLoading, clear, searchQuery}) => {
   
@@ -20,28 +22,11 @@ const WasteCard = ({id, setError, setLoading, clear, searchQuery}) => {
 
   // to get the address that is connect to the dapp
   const { address } = useAccount();
-  const [tokenInput, setTokenInput] = useState("Token");
+  const [tokenInput, setTokenInput] = useState("0xf333c5BA38A6a8C83877E0B7a99836F28219c0F6");
 // initializing providers
-  let provider;
+ 
+  
 
-  if (typeof window !== 'undefined' && window.ethereum) {
-    provider = new BrowserProvider(window.ethereum)
-  }
-
-  const wallet = getWallet(process.env.NEXT_PUBLIC_WALLET_PRIVATE_KEY)
-  const paymasterParams = utils.getPaymasterParams(
-    Generatepayment.address,
-    {
-      type: "General",
-      innerInput: new Uint8Array(),
-    }
-  );
-
-  const contractWasteInsured = new ethers.Contract(
-    wasteInsure.address,
-    wasteInsure.abi,
-    wallet
-  );
 
 
 
@@ -53,8 +38,7 @@ const WasteCard = ({id, setError, setLoading, clear, searchQuery}) => {
   })
 
   const [waste, setWaste] = useState(null)
-  
-  const { openConnectModal } = useConnectModal();
+
 
   const getFormattedProduct = useCallback(() => {
     // return null if there not product to return
@@ -84,15 +68,41 @@ const WasteCard = ({id, setError, setLoading, clear, searchQuery}) => {
   // function to hand the waste payment
   const handlePayment = async () => {
     // await writeContractAsync(simulateWastePayment?.request)
-    let paymasterBalance = await provider.getBalance(Generatepayment.address);
+  
 
-    console.log("Balance paymaster ", paymasterBalance.toString());
-    await contractWasteInsured.wastePayment(id, tokenInput,{
-        customData: {
-            gasPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
-            paymasterParams: paymasterParams,
-        }
-    })
+    const [account] =
+      typeof window !== "undefined" && window.ethereum
+        ? await window.ethereum.request({ method: "eth_requestAccounts" }) // Request accounts if in a browser with Ethereum provider
+        : [];
+
+    if (!account) {
+      throw new Error("No account found. Please connect your wallet."); // Throw an error if no account is found
+    }
+
+    const walletClient = typeof window !== "undefined" && window.ethereum ? createWalletClient({
+      account,
+      chain: zkSyncSepoliaTestnet,
+      transport: custom(window.ethereum)
+  }).extend(eip712WalletActions()) : null;
+
+    const response = await walletClient.writeContract({
+      address: wasteInsure.address,
+      abi: wasteInsure.abi,
+      functionName: "wastePayment",
+      args: [
+        id, tokenInput
+      ],
+      account,
+      paymaster: Generatepayment.address,
+      paymasterInput: getGeneralPaymasterInput({
+        innerInput: new Uint8Array(),
+      }),
+    });
+    console.log(response, " result");
+    toast.success("Waste Recorded");
+   
+
+
   }
   
 
@@ -102,10 +112,7 @@ const WasteCard = ({id, setError, setLoading, clear, searchQuery}) => {
     clear();
 
     try {
-      if(!address && openConnectModal) {
-        openConnectModal();
-        return
-      }
+      
       // messages to display during the process of the payments
       await toast.promise(handlePayment(), {
         pending: "Awaiting Payment",
@@ -153,14 +160,18 @@ const WasteCard = ({id, setError, setLoading, clear, searchQuery}) => {
             <p className=' text-[18px] font-medium p-1 text-[#efae07]'>Hopital Choice Address <span className=' text-white text-sm'>{truuncateAddress(waste.hospitalAdress)}</span></p>
           </div>
           <div className=' flex justify-center items-center flex-col'>
+            {waste.isPaid? "Admin paid": <>
           <select className="select select-bordered w-full max-w-xs" onChange={(e) => {
                   setTokenInput(e.target.value);
                 }}>
             <option disabled selected>Select the prefered payment</option>
             <option value=''>USDC</option>
             <option value=''>USDT</option>
+            <option value='0xf333c5BA38A6a8C83877E0B7a99836F28219c0F6'>AMT</option>
           </select>
+          
             <button className=' bg-white py-2 px-2 rounded-lg font-medium text-blue-700 hover:text-white hover:bg-[#efae07] mt-5 mb-5' onClick={payment}>Transfer Payment</button>
+          </>}
           </div>
         </>
         ) : <>
